@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Blog.Models.Post>
+
+@{
+    ViewData["Title"] = "Posts";
+    List<PostsTags> tags = (List<PostsTags>)ViewData["PostsTags"];
+}
+
+<div class="col-12">
+
+    @foreach (var post in Model)
+    {
+        <div class="card mb-3">
+            <img src="@post.ImagePath" class="card-img-top" alt="PostImage">
+            <div class="card-body">
+                @if (post.Category != null)
+                {
+                    <a class="card-subtitle" style="color: #808080; text-decoration:none;" href="">@post.Category.Name</a>
+                    @foreach(var pt in tags)
+                    {
+                        @if (pt.Post.Id == post.Id)
+                        {
+                            <a href="#" class="btn btn-sm btn-link p-0">#@pt.Tag.Name</a>
+                        }
+                    }
+                }
+                <h4 class="card-title" style="text-align:center;">@post.Title</h4>
+                <p class="card-text">@post.Description</p>
+                <a href="/Posts/@post.Id" class="btn btn-outline-primary btn-sm">Read more...</a>
+            </div>
+        </div>
+    }
+
+</div>

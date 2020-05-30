@@ -1,0 +1,144 @@
+﻿@model Blog.Models.PostWithTags
+
+@{
+    ViewData["Title"] = "Post";
+    var categories = (List<Category>)ViewData["categories"];
+}
+<h4>Post</h4>
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-action="Post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-4">
+                <label asp-for="Post.Title" class="control-label"></label>
+                <input asp-for="Post.Title" class="form-control" />
+                <span asp-validation-for="Post.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="Post.ImagePath" class="control-label"></label>
+                <input asp-for="Post.ImagePath" class="form-control" />
+                <span asp-validation-for="Post.ImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="Post.CategoryId" class="control-label"></label>
+                <select class="custom-select" asp-for="Post.CategoryId" asp-items="@(new SelectList(categories, "Id", "Name"))">
+                </select>
+                <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="Post.Description" class="control-label"></label>
+                <input asp-for="Post.Description" class="form-control" />
+                <span asp-validation-for="Post.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <label asp-for="Tags" class="control-label"></label>
+                <input asp-for="Tags" class="form-control" />
+                <span asp-validation-for="Tags" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12">
+                <label asp-for="Post.Text" class="control-label"></label>
+                <input type="hidden" id="richtextvalue" value="text" asp-for="Post.Text" />
+                <span asp-validation-for="Post.Text" class="text-danger"></span>
+                <div>
+                    <div class="bg-light p-2">
+                        <div class="btn-group" role="group">
+                            <button class="btn-secondary" onclick="execCmd('undo'); return false;">
+                                <i class="material-icons">undo</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('redo'); return false;">
+                                <i class="material-icons">redo</i>
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <div class="btn-secondary">
+                                <button class="btn-secondary" onclick="execCmdArgs('insertImage', prompt('Enter image URL:')); return false;">
+                                    <i class="material-icons">image</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button class="btn-secondary" onclick="execCmd('bold'); return false;">
+                                <i class="material-icons">format_bold</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('italic'); return false;">
+                                <i class="material-icons">format_italic</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('underline'); return false;">
+                                <i class="material-icons">format_underline</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('strikeThrough'); return false;">
+                                <i class="material-icons">format_strikethrough</i>
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button class="btn-secondary" onclick="execCmd('justifyLeft'); return false;">
+                                <i class="material-icons">format_align_left</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('justifyCenter'); return false;">
+                                <i class="material-icons">format_align_center</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('justifyRight'); return false;">
+                                <i class="material-icons">format_align_right</i>
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button class="btn-secondary" onclick="execCmd('insertUnorderedList'); return false;">
+                                <i class="material-icons">format_list_bulleted</i>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('insertOrderedList'); return false;">
+                                <i class="material-icons">format_list_numbered</i>
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button class="btn-secondary" onclick="execCmd('superscript'); return false;">
+                                <span style="font-weight:bold;">x<sup>y</sup></span>
+                            </button>
+                            <button class="btn-secondary" onclick="execCmd('subscript'); return false;">
+                                <span style="font-weight:bold;">x<sub>y</sub></span>
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <select class="btn-secondary" onchange="execCmdArgs('heading', this.value);">
+                                <option> </option>
+                                <option value="H1">H1</option>
+                                <option value="H2">H2</option>
+                                <option value="H3">H3</option>
+                                <option value="H4">H4</option>
+                                <option value="H5">H5</option>
+                                <option value="H6">H6</option>
+                            </select>
+                            <select class="btn-secondary" onchange="execCmdArgs('fontName', this.value);">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Calibri">Calibri</option>
+                                <option value="Comic Sans">Comic Sans</option>
+                            </select>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <input class="btn-secondary" type="color" value="000000" onchange="execCmdArgs('foreColor', this.value); return false;">
+                            <input class="btn-secondary" type="color" value="000000" onchange="execCmdArgs('backColor', this.value); return false;">
+                        </div>
+                    </div>
+                    <iframe name="richText" id="richText" class="border-info col-12" style="height:500px;" onload="enableEditMode();">
+                        <html>
+                        <body>
+                        </body>
+                    </html>
+                </iframe>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" onmouseover="beforeSubmit();" />
+        </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Blog.Models.Post>
+
+@{
+    ViewData["Title"] = "List";
+}
+<h4>Posts</h4>
+<p>
+    <a asp-action="Post">Create New</a>
+</p>
+<table class="table col-12">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                <button type="button" class="btn btn-link btn-sm" data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="@Html.DisplayFor(modelItem => item.Description)">
+                    Show
+                </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-link btn-sm" data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="@Html.DisplayFor(modelItem => item.Text)">
+                    File
+                </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-link btn-sm" data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="@Html.DisplayFor(modelItem => item.ImagePath)">
+                    URL
+                </button>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="Delete/@item.Id" onclick="return confirm('Are you sure?');">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

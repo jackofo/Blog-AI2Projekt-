@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Blog.Models.Comment>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h4>Comments</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdentityUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if (item.Text.Length > 32)
+                {
+                    <button type="button" class="btn btn-link btn-sm" data-container="body" data-toggle="popover" data-placement="bottom"
+                         data-content="@Html.DisplayFor(modelItem => item.Text)">
+                        Show
+                    </button>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Text)
+                }
+            </td>
+            <td>
+                <a class="btn btn-sm btn-link" href="Posts/@item.PostId">@item.PostId</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
+                <a class="btn btn-sm btn-outline-danger" href="Comments/Delete/@item.Id" onclick="return confirm('Are you sure?');">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

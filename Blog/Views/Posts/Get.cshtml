@@ -1,0 +1,50 @@
+﻿@model Blog.Models.PostWithComments;
+
+@{
+    ViewData["Title"] = "Get";
+}
+<div class="col">
+    <img class="col" src="@Model.Post.ImagePath" />
+    <iframe class="col border-0 embed-responsive-item" src="~/Posts/@Model.Post.Text" onload="resizeIframe(this)"></iframe>
+    <div class="border border-primary p-2">
+        <h6>Comments:</h6>
+        @if (User.IsInRole("admin") || User.IsInRole("user"))
+        {
+        <div id="addComment">
+            <form asp-action="Comment" class="form-group border-info">
+                <input type="hidden" asp-for="Comment.PostId" value=@Model.Post.Id />
+                <textarea asp-for="Comment.Text" class="form-control"></textarea>
+                <input type="submit" class="btn btn-outline-primary btn-sm" value="Send" />
+            </form>
+        </div>
+        }
+        <div id="comments">
+            @for (int i = 0; i < Model.Comments.Count; i++)
+            {
+                <div class="rounded-pill pl-3 pr-3 bg-light">
+                    <span class="font-weight-bolder">@Html.DisplayFor(userName => Model.Comments[i].IdentityUser.UserName):</span>
+                    <span>@Model.Comments[i].Text</span>
+                    <span class="text-muted text-light float-right">
+                        @if (Model.Comments[i].CreatedAt.Date == DateTime.Now.Date)
+                        {
+                            @(Model.Comments[i].CreatedAt.Hour.ToString() + ":")
+                            @(Model.Comments[i].CreatedAt.Minute < 10 ? "0" + Model.Comments[i].CreatedAt.Minute.ToString() : Model.Comments[i].CreatedAt.Minute.ToString())
+                        }
+                        else
+                        {
+                            @Model.Comments[i].CreatedAt.Date.ToShortDateString();
+                        }
+                    </span>
+                </div>
+                @if (Model.CurrentUser != null)
+                {
+                    @if (Model.CurrentUser == Model.Comments[i].IdentityUser)
+                    {
+                    <a class="btn btn-link btn-sm" href="/Comments/@Model.Comments[i].Id">Edit</a>
+                    <a class="btn btn-link btn-sm" href="/Comments/Delete/@Model.Comments[i].Id">Delete</a>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
